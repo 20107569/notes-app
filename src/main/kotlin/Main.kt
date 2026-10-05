@@ -1,12 +1,16 @@
 import model.Note
 import service.NoteService
 import utils.readNextInt
+import io.github.oshai.kotlinlogging.KotlinLogging
+
 
 val noteService = NoteService()
+private val logger = KotlinLogging.logger {}
 
 fun main(){
-    runMenu()
+    logger.info { "Notes App Started" }
 
+    runMenu()
 }
 
 fun mainMenu(): Int {
@@ -35,7 +39,8 @@ fun runMenu(){
             2 -> listNotes()
             3 -> updateNote()
             4 -> deleteNote()
-            -1 -> println("Exiting App")
+            -1 -> logger.info { "Notes App Exiting" }
+
             else -> println("Invalid Option")
         }
     } while (input != -1)
