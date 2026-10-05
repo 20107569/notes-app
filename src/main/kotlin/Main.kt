@@ -39,11 +39,11 @@ fun runMenu(){
             2 -> listNotes()
             3 -> updateNote()
             4 -> deleteNote()
-            -1 -> logger.info { "Notes App Exiting" }
+            0 -> logger.info { "Notes App Exiting" }
 
             else -> println("Invalid Option")
         }
-    } while (input != -1)
+    } while (input != 0)
 }
 
 fun addNote(){
