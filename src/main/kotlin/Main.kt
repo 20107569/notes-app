@@ -1,6 +1,8 @@
 import model.Note
 import service.NoteService
 import utils.readNextInt
+import utils.readNextBoolean
+import utils.readNextLine
 import io.github.oshai.kotlinlogging.KotlinLogging
 
 
@@ -47,17 +49,14 @@ fun runMenu(){
 }
 
 fun addNote(){
-    print("Title: ")
-    val title = readlnOrNull() ?: ""
 
-    print("Body: ")
-    val body = readlnOrNull() ?: ""
+    val title = readNextLine("Title: ")
 
-    print("Priority (1-5): ")
-    val priority = readlnOrNull()?.toIntOrNull() ?: 1
+    val body = readNextLine("Body: ")
 
-    print("Category: ")
-    val category = readlnOrNull() ?: ""
+    val priority = readNextInt("Priority (1-5): ")
+
+    val category = readNextLine("Category: ")
 
     noteService.addNote(
         Note(0, title, body, priority, category, false)
@@ -66,13 +65,11 @@ fun addNote(){
     println("Note added")
 }
 
-fun listNotes() {
-    println(noteService.getNotes())
-}
+fun listNotes() = noteService.getNotes().forEach { println(it) }
 
 fun deleteNote() {
-    print("Enter ID to delete: ")
-    val id = readln().toInt()
+
+    val id = readNextInt("Enter ID to delete: ")
 
     if (noteService.deleteNote(id)) {
         println("Deleted")
@@ -82,26 +79,18 @@ fun deleteNote() {
 }
 
 fun updateNote() {
-    print("Enter ID to update: ")
-    val id = readln().toInt()
 
-    print("Title: ")
-    val title = readlnOrNull() ?: ""
+    val id = readNextInt("Enter ID to update: ")
 
-    print("Body: ")
-    val body = readlnOrNull() ?: ""
+    val title = readNextLine("Title: ")
 
-    print("Priority (1-5): ")
-    val priority = readlnOrNull()?.toIntOrNull() ?: 1
+    val body = readNextLine("Body: ")
 
-    print("Category: ")
-    val category = readlnOrNull() ?: ""
+    val priority = readNextInt("Priority (1-5): ")
 
-    print("Is archived (y/n): ")
-    val isArchived = when (readlnOrNull()?.lowercase()) {
-        "y", "yes", "true" -> true
-        else -> false
-    }
+    val category = readNextLine("Category: ")
+
+    val isArchived = readNextBoolean("Is archived (y/n): ")
 
     val updated = Note(id, title, body, priority, category, isArchived)
 

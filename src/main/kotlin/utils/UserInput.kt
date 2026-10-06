@@ -56,3 +56,12 @@ fun readNextChar(prompt: String = ""): Char {
         println("Please enter exactly one character.")
     }
 }
+
+fun readNextBoolean(prompt: String = ""): Boolean {
+    print(prompt)
+    return when (readlnOrNull()?.lowercase()) {
+        "y", "yes", "true" -> true
+        else -> false
+    }
+}
+

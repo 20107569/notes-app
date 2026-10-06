@@ -8,3 +8,8 @@ data class Note(
     var category: String,
     var isArchived: Boolean
 )
+{
+    override fun toString(): String {
+        return "$id: $title | $body | Priority: $priority | Category: $category [${if (isArchived) "ARCHIVED" else "ACTIVE"}]"
+    }
+}
