@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Assertions.*
 import model.Note
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 
 class NoteServiceTest {
 
@@ -39,49 +40,69 @@ class NoteServiceTest {
         println("Test completed")
     }
 
-    @Test
-    fun `add note to an empty service increases size correctly`() {
-        assertEquals(0, emptyNoteService.getNotes().size)
-        emptyNoteService.addNote(note1)
-        assertEquals(1, emptyNoteService.getNotes().size)
+    @Nested
+    inner class AddNotes {
+
+        @Test
+        fun `add note to an empty service increases size correctly`() {
+            assertEquals(0, emptyNoteService.getNotes().size)
+            emptyNoteService.addNote(note1)
+            assertEquals(1, emptyNoteService.getNotes().size)
+        }
+
+        @Test
+        fun `add note to an populated service increases size correctly`() {
+            assertEquals(4, populatedNoteService.getNotes().size)
+            populatedNoteService.addNote(note5)
+            assertEquals(5, populatedNoteService.getNotes().size)
+        }
+
+        @Test
+        fun `add note stores correct values`() {
+            emptyNoteService.addNote(note1)
+
+            val retrievedNote = emptyNoteService.getNotes().first()
+            // Note: other functions test isArchived and id
+            assertEquals(note1.title, retrievedNote.title)
+            assertEquals(note1.body, retrievedNote.body)
+            assertEquals(note1.priority, retrievedNote.priority)
+            assertEquals(note1.category, retrievedNote.category)
+        }
+
+        @Test
+        fun `add note sets isArchived to false`() {
+            emptyNoteService.addNote(note1)
+            emptyNoteService.addNote(note2)
+
+            val retrievedNote1 = emptyNoteService.getNotes()[0]
+            val retrievedNote2 = emptyNoteService.getNotes()[1]
+
+            assertEquals(false, retrievedNote1.isArchived)
+            assertEquals(false, retrievedNote2.isArchived)
+        }
+
+        @Test
+        fun `ensure ids remain unique after multiple inserts`() {
+            assertEquals(0, populatedNoteService.getNotes()[0].id)
+            assertEquals(1, populatedNoteService.getNotes()[1].id)
+            assertEquals(2, populatedNoteService.getNotes()[2].id)
+            assertEquals(3, populatedNoteService.getNotes()[3].id)
+        }
     }
 
-    @Test
-    fun `add note to an populated service increases size correctly`() {
-        assertEquals(4, populatedNoteService.getNotes().size)
-        populatedNoteService.addNote(note5)
-        assertEquals(5, populatedNoteService.getNotes().size)
+    @Nested
+    inner class GetNotes{
+
+        @Test
+        fun `getNotes returns an empty list when service is empty`() {
+            assertTrue(emptyNoteService.getNotes().isEmpty())
+        }
+
+        @Test
+        fun `getNotes returns all notes when service is populated`() {
+            val notes = populatedNoteService.getNotes()
+            assertEquals(4, notes.size)
+        }
     }
 
-    @Test
-    fun `add note stores correct values`() {
-        emptyNoteService.addNote(note1)
-
-        val retrievedNote = emptyNoteService.getNotes().first()
-        // Note: other functions test isArchived and id
-        assertEquals(note1.title, retrievedNote.title)
-        assertEquals(note1.body, retrievedNote.body)
-        assertEquals(note1.priority, retrievedNote.priority)
-        assertEquals(note1.category, retrievedNote.category)
-    }
-
-    @Test
-    fun `add note sets isArchived to false`() {
-        emptyNoteService.addNote(note1)
-        emptyNoteService.addNote(note2)
-
-        val retrievedNote1 = emptyNoteService.getNotes()[0]
-        val retrievedNote2 = emptyNoteService.getNotes()[1]
-
-        assertEquals(false,  retrievedNote1.isArchived)
-        assertEquals(false, retrievedNote2.isArchived)
-    }
-
-    @Test
-    fun `ensure ids remain unique after multiple inserts`() {
-        assertEquals(0, populatedNoteService.getNotes()[0].id)
-        assertEquals(1, populatedNoteService.getNotes()[1].id)
-        assertEquals(2, populatedNoteService.getNotes()[2].id)
-        assertEquals(3, populatedNoteService.getNotes()[3].id)
-    }
 }
