@@ -10,6 +10,7 @@ class NoteService {
 
     fun addNote(note: Note) {
         note.id = getId()
+        note.isArchived = false
         notes.add(note)
     }
 
