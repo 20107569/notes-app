@@ -152,4 +152,64 @@ class NoteServiceTest {
 
     }
 
+    @Nested
+    inner class UpdateNotes {
+        //updating an existing note returns true
+        @Test
+        fun `updating an existing note returns true`() {
+            val updated = Note(1,"Updated Title", "Updated Body", 5, "Work", true)
+            assertTrue(populatedNoteService.updateNote(1, updated))
+        }
+
+        //updating a non-existent note returns false
+        @Test
+        fun `updating a non-existent note returns false`() {
+            val updated = Note(100, "Updated Title", "Updated Body", 5, "Work", false)
+            assertFalse(populatedNoteService.updateNote(100, updated))
+        }
+
+        //updating from an empty service returns false
+        @Test
+        fun `updating from an empty service returns false`() {
+            val updated = Note(1,"Updated Title", "Updated Body", 5, "Work", false)
+            assertFalse(emptyNoteService.updateNote(1, updated))
+        }
+
+        //updating an existing note does not change the number of notes
+        @Test
+        fun `updating an existing note does not change the number of notes`() {
+            val sizeBefore = populatedNoteService.getNotes().size
+
+            val updated = Note(1,"Updated Title", "Updated Body", 5, "Work", true)
+            populatedNoteService.updateNote(1, updated)
+            assertEquals(sizeBefore, populatedNoteService.getNotes().size)
+        }
+
+        //updating an existing note changes it's stored values
+        @Test
+        fun `updating an existing note changes it's stored values`() {
+            val updated = Note(1, "Updated Title", "Updated Body", 5, "Personal", true)
+
+            populatedNoteService.updateNote(1, updated)
+
+            val retrieved = populatedNoteService.getNotes()[1]
+            assertEquals("Updated Title", retrieved.title)
+            assertEquals("Updated Body", retrieved.body)
+            assertEquals(5, retrieved.priority)
+            assertEquals("Personal", retrieved.category)
+            assertTrue(retrieved.isArchived)
+        }
+
+        //updating an existing note preserves it's ID
+        @Test
+        fun `updating an existing note preserves it's ID`() {
+            val sizeBefore = populatedNoteService.getNotes().size
+            val updated = Note(1, "Updated Title", "Updated Body", 5, "Personal", true)
+            populatedNoteService.updateNote(1, updated)
+
+            assertEquals(sizeBefore, populatedNoteService.getNotes().size)
+        }
+
+    }
+
 }
