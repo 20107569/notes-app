@@ -79,6 +79,7 @@ class NoteServiceTest {
 
             assertEquals(false, retrievedNote1?.isArchived)
             assertEquals(false, retrievedNote2?.isArchived)
+
         }
 
         @Test
