@@ -32,6 +32,9 @@ class NoteService {
         return false
     }
 
+    fun findNoteById(id: Int): Note? {
+        return notes.find { it.id == id }
+    }
 
 }
 
