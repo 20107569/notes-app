@@ -157,6 +157,51 @@ class NoteServiceTest {
             assertTrue(activeList.contains(note4))
         }
 
+        @Test
+        fun `getNotesByCategory handles empty list`() {
+            val result = emptyNoteService.getNotesByCategory("Work")
+            assertTrue(result.isEmpty())
+        }
+
+        @Test
+        fun `getNotesByCategory returns all matching notes when all match` () {
+            emptyNoteService.addNote(Note(0, "A", "Body A", 1, "Work", false))
+            emptyNoteService.addNote(Note(0, "B", "Body B", 2, "Work", false))
+            emptyNoteService.addNote(Note(0, "C", "Body C", 3, "Work", false))
+
+            assertEquals(3, emptyNoteService.numberOfNotes())
+            val result = emptyNoteService.getNotesByCategory("Work")
+
+            assertEquals(3, result.size)
+            assertTrue(result.all { it.category == "Work" })
+        }
+
+        @Test
+        fun `getNotesByCategory returns no notes when the category is not in the list`() {
+            val result = populatedNoteService.getNotesByCategory("Invalid Category")
+            assertTrue(result.isEmpty())
+        }
+
+        @Test
+        fun `getNotesByCategory returns matching categories regardless of case` () {
+            val result = populatedNoteService.getNotesByCategory("home")
+            assertEquals(1, result.size)
+            assertTrue(result.all { it.category == "Home" })
+        }
+
+        @Test
+        fun `getNotesByCategory excludes notes whose categories do not match` () {
+            assertEquals(4, populatedNoteService.numberOfNotes())
+
+            val result = populatedNoteService.getNotesByCategory("Work")
+            assertEquals(1, result.size)
+
+            assertTrue(result.contains(note1))
+            assertFalse(result.contains(note2))
+            assertFalse(result.contains(note3))
+            assertFalse(result.contains(note4))
+        }
+
     }
 
     @Nested
