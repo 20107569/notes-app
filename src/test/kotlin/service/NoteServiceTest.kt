@@ -7,6 +7,7 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import persistence.XMLSerializer
+import persistence.JSONSerializer
 import java.io.File
 
 class NoteServiceTest {
@@ -462,6 +463,44 @@ class NoteServiceTest {
             loadedNotes.load()
 
             //Comparing the source of the notes (storingNotes) with the XML loaded notes (loadedNotes)
+            assertEquals(3, storingNotes.numberOfNotes())
+            assertEquals(3, loadedNotes.numberOfNotes())
+            assertEquals(storingNotes.numberOfNotes(), loadedNotes.numberOfNotes())
+            assertEquals(storingNotes.findNoteById(0), loadedNotes.findNoteById(0))
+            assertEquals(storingNotes.findNoteById(1), loadedNotes.findNoteById(1))
+            assertEquals(storingNotes.findNoteById(2), loadedNotes.findNoteById(2))
+        }
+
+        @Test
+        fun `saving and loading an empty collection in JSON doesn't crash app`() {
+            // Saving an empty notes.JSON file.
+            val storingNotes = NoteService(JSONSerializer(File("notes.json")))
+            storingNotes.store()
+
+            //Loading the empty notes.json file into a new object
+            val loadedNotes = NoteService(JSONSerializer(File("notes.json")))
+            loadedNotes.load()
+
+            //Comparing the source of the notes (storingNotes) with the JSON loaded notes (loadedNotes)
+            assertEquals(0, storingNotes.numberOfNotes())
+            assertEquals(0, loadedNotes.numberOfNotes())
+            assertEquals(storingNotes.numberOfNotes(), loadedNotes.numberOfNotes())
+        }
+
+        @Test
+        fun `saving notes to JSON and then loading them doesn't loose data`() {
+            // Storing 3 notes to the notes.JSON file.
+            val storingNotes = NoteService(JSONSerializer(File("notes.json")))
+            storingNotes.addNote(note1)
+            storingNotes.addNote(note2)
+            storingNotes.addNote(note3)
+            storingNotes.store()
+
+            //Loading notes.json into a different collection
+            val loadedNotes = NoteService(JSONSerializer(File("notes.json")))
+            loadedNotes.load()
+
+            //Comparing the source of the notes (storingNotes) with the JSON loaded notes (loadedNotes)
             assertEquals(3, storingNotes.numberOfNotes())
             assertEquals(3, loadedNotes.numberOfNotes())
             assertEquals(storingNotes.numberOfNotes(), loadedNotes.numberOfNotes())
