@@ -4,9 +4,12 @@ import utils.readNextInt
 import utils.readNextBoolean
 import utils.readNextLine
 import io.github.oshai.kotlinlogging.KotlinLogging
+import persistence.XMLSerializer
+import persistence.JSONSerializer
+import java.io.File
 
-
-val noteService = NoteService()
+//val noteService = NoteService(XMLSerializer(File("notes.xml")))
+val noteService = NoteService(JSONSerializer(File("notes.json")))
 private val logger = KotlinLogging.logger {}
 
 fun main(){
@@ -26,6 +29,8 @@ fun mainMenu(): Int {
          > |   3) Update a note             |
          > |   4) Delete a note             |
          > ----------------------------------
+         > |   20) Save Notes               |
+         > |   21) Load Notes               |
          > |   0) Exit                      |
          > ----------------------------------
          > """.trimMargin(">"))
@@ -41,6 +46,8 @@ fun runMenu(){
             2 -> listNotes()
             3 -> updateNote()
             4 -> deleteNote()
+            20 -> save()
+            21 -> load()
             0 -> logger.info { "Notes App Exiting" }
 
             else -> println("Invalid Option")
@@ -98,5 +105,21 @@ fun updateNote() {
         println("Updated")
     } else {
         println("Not found")
+    }
+}
+
+fun save() {
+    try {
+        noteService.store()
+    } catch (e: Exception) {
+        System.err.println("Error writing to file: $e")
+    }
+}
+
+fun load() {
+    try {
+        noteService.load()
+    } catch (e: Exception) {
+        System.err.println("Error reading from file: $e")
     }
 }
