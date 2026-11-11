@@ -35,11 +35,11 @@ class NoteService (serializerType: Serializer){
     }
 
     fun archiveNote(id: Int): Boolean {
-        for (note in notes) {
-            if (note.id == id && !note.isArchived) {
-                note.isArchived = true
-                return true
-            }
+        val note = notes.find { it.id == id && !it.isArchived }
+
+        if (note != null) {
+            note.isArchived = true
+            return true
         }
         return false
     }
