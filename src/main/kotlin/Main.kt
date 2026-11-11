@@ -152,7 +152,7 @@ fun load() {
 
 fun archiveNote(){
     noteService.getActiveNotes().forEach { println(it) }
-    val id = readNextInt("Enter ID of Note to be Archived: ")
+    val id = readNextInt("Enter ID of the Note to be Archived: ")
     if (noteService.archiveNote(id))
         println("Archived")
     else
