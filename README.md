@@ -21,6 +21,9 @@ A console Notes app developed using Kotlin.
 - Count archived notes
 - Count active notes
 - Unit testing using JUnit 5
+
+### V3.0
+- V1.0 and V2.0 Features
 - Archive a note
 - View all notes
 - View active notes
