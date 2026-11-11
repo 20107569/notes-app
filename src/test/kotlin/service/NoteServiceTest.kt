@@ -510,4 +510,28 @@ class NoteServiceTest {
         }
     }
 
+    @Nested
+    inner class ArchiveNotes {
+        @Test
+        fun `archiving a note that does not exist returns false`(){
+            assertFalse(populatedNoteService.archiveNote(6))
+            assertFalse(populatedNoteService.archiveNote(-1))
+            assertFalse(emptyNoteService.archiveNote(0))
+        }
+
+        @Test
+        fun `archiving an already archived note returns false`(){
+            populatedNoteService.findNoteById(2)!!.isArchived = true
+            assertTrue(populatedNoteService.findNoteById(2)!!.isArchived)
+            assertFalse(populatedNoteService.archiveNote(2))
+        }
+
+        @Test
+        fun `archiving an active note that exists returns true and archives`() {
+            assertFalse(populatedNoteService.findNoteById(1)!!.isArchived)
+            assertTrue(populatedNoteService.archiveNote(1))
+            assertTrue(populatedNoteService.findNoteById(1)!!.isArchived)
+        }
+    }
+
 }
