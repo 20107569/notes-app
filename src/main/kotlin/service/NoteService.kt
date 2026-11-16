@@ -66,16 +66,10 @@ class NoteService (serializerType: Serializer){
             .filter { !it.isArchived }
             .toList()
 
-    fun getNotesByCategory(category: String): List<Note> {
-        val result = ArrayList<Note>()
-
-        for (note in notes) {
-            if (note.category.equals(category, ignoreCase = true)) {
-                result.add(note)
-            }
-        }
-        return result
-    }
+    fun getNotesByCategory(category: String): List<Note> =
+        notes.stream()
+            .filter { it.category.equals(category, ignoreCase = true) }
+            .toList()
 
     fun findNoteById(id: Int): Note? {
         return notes.find { it.id == id }
