@@ -50,16 +50,10 @@ class NoteService (serializerType: Serializer){
             .filter { it.isArchived }
             .toList()
 
-   fun getNotesByPriority(priority: Int): List<Note> {
-       var result = ArrayList<Note>()
-
-       for (note in notes) {
-           if (note.priority == priority) {
-               result.add(note)
-           }
-       }
-       return result
-   }
+   fun getNotesByPriority(priority: Int): List<Note> =
+       notes.stream()
+           .filter { it.priority == priority }
+           .toList()
 
     fun getActiveNotes(): List<Note> =
         notes.stream()
