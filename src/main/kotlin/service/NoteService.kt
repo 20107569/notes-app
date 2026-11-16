@@ -2,6 +2,7 @@ package service
 
 import persistence.Serializer
 import model.Note
+import java.util.stream.Collectors
 
 class NoteService (serializerType: Serializer){
 
@@ -44,16 +45,10 @@ class NoteService (serializerType: Serializer){
         return false
     }
 
-    fun getArchivedNotes(): List<Note> {
-        val result = ArrayList<Note>()
-
-        for (note in notes) {
-            if (note.isArchived) {
-                result.add(note)
-            }
-        }
-        return result
-    }
+    fun getArchivedNotes(): List<Note> =
+        notes.stream()
+            .filter { it.isArchived }
+            .toList()
 
    fun getNotesByPriority(priority: Int): List<Note> {
        var result = ArrayList<Note>()
