@@ -46,24 +46,19 @@ class NoteService (serializerType: Serializer){
     }
 
     fun getArchivedNotes(): List<Note> =
-        notes.stream()
-            .filter { it.isArchived }
-            .toList()
+        notes.filter { it.isArchived }
+
 
    fun getNotesByPriority(priority: Int): List<Note> =
-       notes.stream()
-           .filter { it.priority == priority }
-           .toList()
+       notes.filter { it.priority == priority }
+
 
     fun getActiveNotes(): List<Note> =
-        notes.stream()
-            .filter { !it.isArchived }
-            .toList()
+        notes.filter { !it.isArchived }
 
     fun getNotesByCategory(category: String): List<Note> =
-        notes.stream()
-            .filter { it.category.equals(category, ignoreCase = true) }
-            .toList()
+        notes.filter { it.category.equals(category, ignoreCase = true) }
+
 
     fun findNoteById(id: Int): Note? {
         return notes.find { it.id == id }
@@ -78,33 +73,13 @@ class NoteService (serializerType: Serializer){
 
     fun numberOfNotes(): Int = notes.size
 
-    fun numberOfArchivedNotes(): Int {
-        return notes.stream()
-            .filter{note: Note -> note.isArchived}
-            .count()
-            .toInt()
-    }
+    fun numberOfArchivedNotes() = notes.count{ it.isArchived }
 
-    fun numberOfActiveNotes(): Int {
-        return notes.stream()
-            .filter{note: Note -> !note.isArchived}
-            .count()
-            .toInt()
-    }
+    fun numberOfActiveNotes() = notes.count { !it.isArchived }
 
-    fun numberOfNotesByCategory(category: String): Int {
-        return notes.stream()
-            .filter { note: Note -> note.category == category }
-            .count()
-            .toInt()
-    }
+    fun numberOfNotesByCategory(category: String): Int = notes.count { it.category.equals(category, ignoreCase = true) }
 
-    fun numberOfNotesByPriority(priority: Int): Int {
-        return notes.stream()
-            .filter { note: Note -> note.priority == priority }
-            .count()
-            .toInt()
-    }
+    fun numberOfNotesByPriority(priority: Int): Int = notes.count { it.priority == priority }
 
     fun load() {
         val array = serializer.read(Array<Note>::class.java)
