@@ -532,6 +532,61 @@ class NoteServiceTest {
             assertTrue(populatedNoteService.archiveNote(1))
             assertTrue(populatedNoteService.findNoteById(1)!!.isArchived)
         }
+
     }
 
+    @Nested
+    inner class SearchMethods {
+
+        @Test
+        fun `search returns matching note by title`(){
+            val result = populatedNoteService.searchNotesByContent("Test1")
+
+            assertEquals(listOf(note1), result)
+        }
+
+        @Test
+        fun `search returns matching note by body`(){
+            val result = populatedNoteService.searchNotesByContent("Body2")
+
+            assertEquals(listOf(note2), result)
+        }
+
+        @Test
+        fun `search returns title regardless of case`(){
+            val result = populatedNoteService.searchNotesByContent("tEsT3")
+
+            assertEquals(listOf(note3), result)
+        }
+
+        @Test
+        fun `search returns body regardless of case`(){
+            val result = populatedNoteService.searchNotesByContent("bOdY4")
+
+            assertEquals(listOf(note4), result)
+        }
+
+        @Test
+        fun `search returns all the matching notes for partial content`() {
+            val result = populatedNoteService.searchNotesByContent("est")
+
+            assertEquals(listOf(note1, note2, note3, note4), result)
+        }
+
+        @Test
+        fun `search returns empty list when no content matches`() {
+            val result = populatedNoteService.searchNotesByContent("Pets")
+
+            assertTrue(result.isEmpty())
+
+        }
+
+        @Test
+        fun `search returns empty list when no notes are stored`() {
+            val result = emptyNoteService.searchNotesByContent("Test")
+
+            assertTrue(result.isEmpty())
+        }
+
+    }
 }
