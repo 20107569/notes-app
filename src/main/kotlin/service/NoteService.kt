@@ -69,6 +69,13 @@ class NoteService (serializerType: Serializer){
         return notes.find { it.id == id }
     }
 
+    fun searchNotesByContent(content: String): List<Note> =
+        notes.filter {
+            it.title.contains(content, ignoreCase = true) ||
+                    it.body.contains(content, ignoreCase = true)
+        }
+
+
     fun numberOfNotes(): Int = notes.size
 
     fun numberOfArchivedNotes(): Int {
